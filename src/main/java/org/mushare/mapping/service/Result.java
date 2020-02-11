@@ -1,5 +1,6 @@
 package org.mushare.mapping.service;
 
+import org.mushare.mapping.controller.Response;
 import org.mushare.mapping.mapping.ResultErrorMapping;
 import org.springframework.http.ResponseEntity;
 
@@ -9,6 +10,7 @@ public class Result<T> {
 
     private ResultCode code;
     private T data = null;
+    private ResultErrorMapping errorMapping;
 
     public T getData() {
         return data;
@@ -21,6 +23,7 @@ public class Result<T> {
     protected Result(ResultCode code, T data) {
         this.code = code;
         this.data = data;
+        this.errorMapping = new ResultErrorMapping(code);
     }
 
     public static Result success() {
@@ -43,17 +46,23 @@ public class Result<T> {
         return !code.equals(CommonResultCode.Success);
     }
 
-    public ResultErrorMapping errorMapping() {
-        return new ResultErrorMapping(code);
+    public Result<T> mapError(Function<ResultErrorMapping, Void> mapError) {
+        mapError.apply(errorMapping);
+        return this;
     }
 
-    public ResponseEntity responseEntity(Function<ResultErrorMapping, ResultErrorMapping> mapError,
-                                   Function<T, ResponseEntity> generateResponseEntity) {
+    public ResponseEntity successResponseEntity() {
         if (hasError()) {
-            ResultErrorMapping errorMapping = errorMapping();
-            return mapError.apply(errorMapping).responseEntity();
+            return errorMapping.responseEntity();
         }
-        return generateResponseEntity.apply(getData());
+        return Response.success().responseEntity();
+    }
+
+    public ResponseEntity responseEntity(Function<T, Response> generateResponse) {
+        if (hasError()) {
+            return errorMapping.responseEntity();
+        }
+        return generateResponse.apply(data).responseEntity();
     }
 
 }

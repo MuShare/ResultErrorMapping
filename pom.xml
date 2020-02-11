@@ -6,7 +6,7 @@
 
   <groupId>org.mushare</groupId>
   <artifactId>mapping</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 
   <distributionManagement>
     <repository>
