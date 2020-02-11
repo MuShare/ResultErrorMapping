@@ -46,8 +46,12 @@ public class Result<T> {
         return !code.equals(CommonResultCode.Success);
     }
 
-    public Result<T> mapError(Function<ResultErrorMapping, Void> mapError) {
-        mapError.apply(errorMapping);
+    public ResultErrorMapping errorMapping() {
+        return errorMapping;
+    }
+
+    public Result<T> mapError(Function<ResultErrorMapping, ResultErrorMapping> mapError) {
+        errorMapping = mapError.apply(errorMapping);
         return this;
     }
 
@@ -55,14 +59,14 @@ public class Result<T> {
         if (hasError()) {
             return errorMapping.responseEntity();
         }
-        return Response.success().responseEntity();
+        return Response.success().build();
     }
 
     public ResponseEntity responseEntity(Function<T, Response> generateResponse) {
         if (hasError()) {
             return errorMapping.responseEntity();
         }
-        return generateResponse.apply(data).responseEntity();
+        return generateResponse.apply(data).build();
     }
 
 }

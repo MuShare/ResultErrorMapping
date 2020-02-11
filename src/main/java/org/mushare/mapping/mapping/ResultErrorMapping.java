@@ -31,10 +31,10 @@ public class ResultErrorMapping {
     public ResponseEntity responseEntity() {
         for (ResultCode resultCode : errorMap.keySet()) {
             if (resultCode.code() == code.code()) {
-                return Response.badRequest(errorMap.get(resultCode)).responseEntity();
+                return Response.badRequest(errorMap.get(resultCode)).build();
             }
         }
-        return Response.badRequest(CommonErrorCode.Unknown).responseEntity();
+        return Response.badRequest(CommonErrorCode.Unknown).build();
     }
 
 }

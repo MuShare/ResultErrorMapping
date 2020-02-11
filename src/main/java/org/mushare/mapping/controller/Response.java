@@ -59,7 +59,7 @@ public class Response {
         return append(key, result.getData());
     }
 
-    public ResponseEntity responseEntity() {
+    public ResponseEntity build() {
         Map<String, Object> data = new HashMap<>();
         data.put("status", status.value());
         data.put("timestamp", System.currentTimeMillis());
