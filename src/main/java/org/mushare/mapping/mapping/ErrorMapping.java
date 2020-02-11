@@ -9,21 +9,21 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResultErrorMapping {
+public class ErrorMapping {
 
     private ResultCode code;
     private Map<ResultCode, ErrorCode> errorMap = new HashMap<>();
 
-    public ResultErrorMapping(ResultCode code) {
+    public ErrorMapping(ResultCode code) {
         this.code = code;
     }
 
-    public ResultErrorMapping append(ResultCode resultCode, ErrorCode errorCode) {
+    public ErrorMapping append(ResultCode resultCode, ErrorCode errorCode) {
         errorMap.put(resultCode, errorCode);
         return this;
     }
 
-    public ResultErrorMapping append(Map<ResultCode, ErrorCode> map) {
+    public ErrorMapping append(Map<ResultCode, ErrorCode> map) {
         errorMap.putAll(map);
         return this;
     }
@@ -31,10 +31,10 @@ public class ResultErrorMapping {
     public ResponseEntity responseEntity() {
         for (ResultCode resultCode : errorMap.keySet()) {
             if (resultCode.code() == code.code()) {
-                return Response.badRequest(errorMap.get(resultCode)).build();
+                return Response.badRequest(errorMap.get(resultCode)).responseEntity();
             }
         }
-        return Response.badRequest(CommonErrorCode.Unknown).build();
+        return Response.badRequest(CommonErrorCode.Unknown).responseEntity();
     }
 
 }

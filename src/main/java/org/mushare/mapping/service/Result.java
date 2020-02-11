@@ -1,7 +1,7 @@
 package org.mushare.mapping.service;
 
 import org.mushare.mapping.controller.Response;
-import org.mushare.mapping.mapping.ResultErrorMapping;
+import org.mushare.mapping.mapping.ErrorMapping;
 import org.springframework.http.ResponseEntity;
 
 import java.util.function.Function;
@@ -10,20 +10,12 @@ public class Result<T> {
 
     private ResultCode code;
     private T data = null;
-    private ResultErrorMapping errorMapping;
-
-    public T getData() {
-        return data;
-    }
-
-    public ResultCode getCode() {
-        return code;
-    }
+    private ErrorMapping errorMapping;
 
     protected Result(ResultCode code, T data) {
         this.code = code;
         this.data = data;
-        this.errorMapping = new ResultErrorMapping(code);
+        this.errorMapping = new ErrorMapping(code);
     }
 
     public static Result success() {
@@ -38,19 +30,15 @@ public class Result<T> {
         return new Result<T>(CommonResultCode.Success, data);
     }
 
-    public boolean errorEquals(ResultCode code) {
+    private boolean errorEquals(ResultCode code) {
         return this.code.equals(code);
     }
 
-    public boolean hasError() {
+    private boolean hasError() {
         return !code.equals(CommonResultCode.Success);
     }
 
-    public ResultErrorMapping errorMapping() {
-        return errorMapping;
-    }
-
-    public Result<T> mapError(Function<ResultErrorMapping, ResultErrorMapping> mapError) {
+    public Result<T> mapError(Function<ErrorMapping, ErrorMapping> mapError) {
         errorMapping = mapError.apply(errorMapping);
         return this;
     }
@@ -59,14 +47,14 @@ public class Result<T> {
         if (hasError()) {
             return errorMapping.responseEntity();
         }
-        return Response.success().build();
+        return Response.success().responseEntity();
     }
 
     public ResponseEntity responseEntity(Function<T, Response> generateResponse) {
         if (hasError()) {
             return errorMapping.responseEntity();
         }
-        return generateResponse.apply(data).build();
+        return generateResponse.apply(data).responseEntity();
     }
 
 }
