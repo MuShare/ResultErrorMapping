@@ -6,7 +6,7 @@
 
   <groupId>org.mushare</groupId>
   <artifactId>mapping</artifactId>
-  <version>0.1</version>
+  <version>0.1.1</version>
 
   <distributionManagement>
     <repository>
@@ -16,8 +16,7 @@
   </distributionManagement>
   
   <name>result-error-mapping</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://github.com/MusShare</url>
+  <url>https://github.com/MuShare/ResultErrorMapping</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

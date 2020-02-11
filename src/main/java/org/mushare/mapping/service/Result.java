@@ -1,6 +1,9 @@
 package org.mushare.mapping.service;
 
 import org.mushare.mapping.mapping.ResultErrorMapping;
+import org.springframework.http.ResponseEntity;
+
+import java.util.function.Function;
 
 public class Result<T> {
 
@@ -20,6 +23,18 @@ public class Result<T> {
         this.data = data;
     }
 
+    public static Result success() {
+        return new Result(CommonResultCode.Success, null);
+    }
+
+    public static Result error(ResultCode code) {
+        return new Result(code, null);
+    }
+
+    public static <T> Result data(T data) {
+        return new Result<T>(CommonResultCode.Success, data);
+    }
+
     public boolean errorEquals(ResultCode code) {
         return this.code.equals(code);
     }
@@ -32,16 +47,13 @@ public class Result<T> {
         return new ResultErrorMapping(code);
     }
 
-    public static Result success() {
-        return new Result(CommonResultCode.Success, null);
-    }
-
-    public static Result error(ResultCode code) {
-        return new Result(code, null);
-    }
-
-    public static <T> Result data(T data) {
-        return new Result<T>(CommonResultCode.Success, data);
+    public ResponseEntity responseEntity(Function<ResultErrorMapping, ResultErrorMapping> mapError,
+                                   Function<T, ResponseEntity> generateResponseEntity) {
+        if (hasError()) {
+            ResultErrorMapping errorMapping = errorMapping();
+            return mapError.apply(errorMapping).responseEntity();
+        }
+        return generateResponseEntity.apply(getData());
     }
 
 }
