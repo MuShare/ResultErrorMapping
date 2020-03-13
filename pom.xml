@@ -10,8 +10,9 @@
 
   <distributionManagement>
     <repository>
-      <id>nexus</id>
-      <url>http://nexus.mushare.cn/repository/eaysjapanese-core/</url>
+      <id>github</id>
+      <name>GitHub OWNER Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/MuShare</url>
     </repository>
   </distributionManagement>
   
