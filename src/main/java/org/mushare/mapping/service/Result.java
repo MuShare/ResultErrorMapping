@@ -34,8 +34,16 @@ public class Result<T> {
         return this.code.equals(code);
     }
 
-    private boolean hasError() {
+    public boolean hasError() {
         return !code.equals(CommonResultCode.Success);
+    }
+
+    public ResultCode getCode() {
+        return this.code;
+    }
+
+    public T getData() {
+        return this.data;
     }
 
     public Result<T> mapError(Function<ErrorMapping, ErrorMapping> mapError) {
