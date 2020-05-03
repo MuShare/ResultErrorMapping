@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,17 @@ public class Response {
             return this;
         }
         result.put(key, value);
+        return this;
+    }
+
+    public Response append(Object object) {
+        for (Field field : object.getClass().getFields()) {
+            try {
+                result.put(field.getName(), field.get(object));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
