@@ -1,5 +1,6 @@
 package org.mushare.mapping.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,13 +57,11 @@ public class Response {
     }
 
     public Response append(Object object) {
-        for (Field field : object.getClass().getFields()) {
-            try {
-                result.put(field.getName(), field.get(object));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = mapper.convertValue(object, Map.class);
+        map.keySet().forEach(key -> {
+            result.put(key, map.get(key));
+        });
         return this;
     }
 
